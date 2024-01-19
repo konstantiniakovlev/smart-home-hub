@@ -1,0 +1,36 @@
+services:
+  api:
+    image: ${SERVICE_NAME}:${VERSION}
+    build: .
+    container_name: ${SERVICE_NAME}
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    ports:
+      - "${API_PORT}:${API_PORT}"
+
+  postgresdb:
+    image: postgres:16.1
+    container_name: ${POSTGRES_NAME}
+    env_file:
+      - ./config/.postgres.env
+    restart: always
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./sql/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: ${TIMESCALE_NAME}
+    env_file:
+      - ./config/.timescaledb.env
+    restart: always
+    volumes:
+      - ./data/timescale:/var/lib/postgresql/data
+      - ./sql/init-timescale.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${TIMESCALE_PORT}:5432"
