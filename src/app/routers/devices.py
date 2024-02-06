@@ -1,12 +1,12 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
-from schemas.devices import DeviceSchema, PostDevice
 from backend.session import create_session
 from models.devices import DeviceModel
+from schemas.devices import DeviceSchema, PostDevice
 
 
 TAG = "Devices"
@@ -16,8 +16,10 @@ router = APIRouter(prefix="/devices")
 
 @router.get(
     path="/",
-    summary="Get One or Every Device",
-    description="Query one or every device registered in the house using device ID or MAC address.",
+    summary="Get Device Information",
+    description="Query one or every device "
+                "registered in the house using device ID "
+                "or MAC address.",
     tags=[TAG],
     response_model=list[DeviceSchema]
 )
@@ -36,7 +38,7 @@ def get_devices(
 
 @router.post(
     path="/register",
-    summary="Register Specific Device",
+    summary="Register Device",
     description="Register a device using its MAC address.",
     tags=[TAG],
     status_code=status.HTTP_201_CREATED,
@@ -59,7 +61,7 @@ def register_device(payload: PostDevice, session: Session = Depends(create_sessi
 
 @router.delete(
     path="/delete/{device_id}",
-    summary="Delete Specific Device",
+    summary="Delete Device",
     description="Delete a device using device ID.",
     tags=[TAG],
     status_code=status.HTTP_200_OK

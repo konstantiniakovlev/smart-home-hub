@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(devices.router, prefix="/hub")
-# app.include_router(programs.router, prefix="/hub")
+app.include_router(programs.router, prefix="/hub")
 
 
 if __name__ == "__main__":
