@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 
-from routers import devices, programs
+from routers import devices, programs, interactions
 from backend.config import ApiSettings
 
 config = ApiSettings()
@@ -15,6 +15,7 @@ app = FastAPI(
 
 app.include_router(devices.router, prefix="/hub")
 app.include_router(programs.router, prefix="/hub")
+app.include_router(interactions.router)
 
 
 if __name__ == "__main__":
