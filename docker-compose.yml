@@ -4,7 +4,7 @@ services:
     build: .
     container_name: ${SERVICE_NAME}
     env_file:
-      - .env
+      - ./config/.api.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

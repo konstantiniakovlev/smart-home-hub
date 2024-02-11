@@ -5,9 +5,9 @@ from pydantic_settings import BaseSettings
 
 
 class ApiSettings(BaseSettings):
-    NAME: str
-    VERSION: str
-    PORT: int
+    NAME: Optional[str] = "smart-home-hub-api"
+    VERSION: Optional[str] = "0.0.1"
+    PORT: Optional[int] = 5000
     SUMMARY: Optional[str] = None
     DESCRIPTION: Optional[str] = None
 

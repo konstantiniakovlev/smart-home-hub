@@ -1,10 +1,12 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
-from schemas.devices import DeviceSchema, PostDevice
 from backend.session import create_session
 from models.devices import DeviceModel
+from schemas.devices import DeviceSchema, PostDevice
 
 
 TAG = "Devices"
@@ -14,40 +16,37 @@ router = APIRouter(prefix="/devices")
 
 @router.get(
     path="/",
-    summary="Get Parameters of Every Device",
-    description="Receive configuration parameters for all devices currently set up in house.",
+    summary="Get Device Information",
+    description="Query one or every device "
+                "registered in the house using device ID "
+                "or MAC address.",
     tags=[TAG],
     response_model=list[DeviceSchema]
 )
-def get_devices(session: Session = Depends(create_session)):
-    response = session.query(DeviceModel).all()
-    return response
-
-
-@router.get(
-    path="/{device_id}",
-    summary="Get Parameters of Specific Device",
-    description="Receive parameters of selected device.",
-    tags=[TAG],
-    response_model=list[DeviceSchema]
-)
-def get_device(device_id: int, session: Session = Depends(create_session)):
-    response = session.query(DeviceModel).filter(DeviceModel.device_id == device_id)
-    return response
+def get_devices(
+        device_id: Optional[int] = None,
+        mac_address: Optional[str] = None,
+        session: Session = Depends(create_session)
+):
+    response = session.query(DeviceModel)
+    if device_id is not None:
+        response = response.filter(DeviceModel.device_id == device_id)
+    if mac_address is not None:
+        response = response.filter(DeviceModel.mac_address == mac_address)
+    return response.all()
 
 
 @router.post(
     path="/register",
-    summary="Register Program on Specific Device",
-    description="Register new program on a device using device ID.",
+    summary="Register Device",
+    description="Register a device using its MAC address.",
     tags=[TAG],
     status_code=status.HTTP_201_CREATED,
 )
-def register(payload: PostDevice, session: Session = Depends(create_session)):
+def register_device(payload: PostDevice, session: Session = Depends(create_session)):
 
     response = session.query(DeviceModel) \
-        .filter(DeviceModel.mac_address == payload.mac_address) \
-        .filter(DeviceModel.dict().get("ip_address", "").split("/")[0] == payload.ip_address)
+        .filter(DeviceModel.mac_address == payload.mac_address)
 
     if response.first() is None:
         post = DeviceModel(**payload.dict())
@@ -57,4 +56,19 @@ def register(payload: PostDevice, session: Session = Depends(create_session)):
 
     else:
         response.update(payload.dict(), synchronize_session=False)
+        session.commit()
+
+
+@router.delete(
+    path="/delete/{device_id}",
+    summary="Delete Device",
+    description="Delete a device using device ID.",
+    tags=[TAG],
+    status_code=status.HTTP_200_OK
+)
+def delete_device(device_id: int, session: Session = Depends(create_session)):
+    response = session.query(DeviceModel).filter(DeviceModel.device_id == device_id)
+
+    if response.first() is not None:
+        session.delete(response.first())
         session.commit()

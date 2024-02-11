@@ -4,18 +4,23 @@ create table if not exists device_registry (
     mac_address macaddr not null,
     ip_address cidr not null,
     device_type varchar(255) not null,
-    description varchar(255)
+    description varchar(255),
+    registered_at timestamp without time zone not null,
+    updated_at timestamp without time zone not null
 );
 
 create table if not exists program_registry (
     program_id int generated always as identity,
-    device_id int,
-    port int not null,
-    description varchar(255)
+    device_id int not null,
+    port int,
+    program_name varchar(255),
+    description varchar(255),
+    registered_at timestamp without time zone not null,
+    updated_at timestamp without time zone not null
 );
 
--- fill in the tables with initial info
-insert into program_registry (device_id, port, description)
-values
-    (1, 5431, 'smart-home-timescaledb, postgres extension for time series data'),
-    (1, 5432, 'smart-home-postgres, postgres for devices used in house');
+-- fill in the tables with initial info todo: move to admin-tools
+-- insert into program_registry (device_id, port, description)
+-- values
+--     (1, 5431, 'smart-home-timescaledb, postgres extension for time series data'),
+--     (1, 5432, 'smart-home-postgres, postgres for devices used in house');
