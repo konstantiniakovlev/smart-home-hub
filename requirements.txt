@@ -1,0 +1,8 @@
+fastapi==0.111.0
+psycopg2==2.9.9
+pydantic==2.8.2
+pydantic-settings==2.3.4
+sqlalchemy==2.0.31
+starlette==0.37.2
+typing==3.7.4.3
+uvicorn==0.30.1
