@@ -1,22 +1,14 @@
 name: Deploy
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    name: Deploy & Build
+    runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install SSH Client
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
-
-      - name: Deploy to Pi
-        run: |
-          git fetch
-          git pull
-          
+      - name: Check out repository into Raspberry Pi
+        uses: actions/checkout@v4
