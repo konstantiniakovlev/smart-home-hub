@@ -1,0 +1,21 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: "smart-home-timescaledb"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - ./data/timescale:/var/lib/postgresql/data
+      - ./sql/init-timescale.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+  api:
+    image: smart-home-hub-api:0.0.1
+    build: .
+    container_name: "smart-home-hub-api"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
