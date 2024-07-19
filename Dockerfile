@@ -3,7 +3,6 @@ LABEL authors="Konstantin"
 
 COPY src/. src/.
 COPY requirements.txt .
-COPY .env .
 
 ENV POSTGRES_HOST=host.docker.internal
 
