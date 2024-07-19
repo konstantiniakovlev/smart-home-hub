@@ -9,6 +9,15 @@ jobs:
   deploy:
     name: Deploy & Build
     runs-on: self-hosted
+    timeout-minutes: 60
     steps:
       - name: Check out repository into Raspberry Pi
         uses: actions/checkout@v4
+
+      - name: Docker Compose Up
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          sudo docker compose up -d --build timescaledb
+          sudo docker compose up -d --build api
+          sudo docker image prune -f

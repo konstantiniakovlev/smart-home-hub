@@ -11,13 +11,28 @@ services:
     ports:
       - "5432:5432"
   api:
-    image: smart-home-hub-api:0.0.1
+    image: smart-home-hub-api:0.0.2
     build: .
     container_name: "smart-home-hub-api"
     environment:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 0s
+        max_attempts: 3
+      rollback_config:
+        failure_action: pause
+        order: start-first
+      update_config:
+        parallelism: 1
+        delay: 0s
+        failure_action: rollback
+        max_failure_ratio: 3
+        order: start-first
     ports:
       - "5000:5000"
