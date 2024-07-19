@@ -15,9 +15,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Docker Compose Up
+        run: |
+          rsync -av --exclude='/home/pi/Projects/smart-home-hub/.git' $GITHUB_WORKSPACE/ /home/pi/Projects/smart-home-hub/
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > /home/pi/Projects/smart-home-hub/.env
+          cd /home/pi/Projects/smart-home-hub/
+          sudo docker compose up --build -d timescaledb --force-recreate
+          sudo docker compose up --build -d api
+          sudo docker system prune -f
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: |
-          sudo docker compose up -d --build timescaledb
-          sudo docker compose up -d --build api
-          sudo docker image prune -f
