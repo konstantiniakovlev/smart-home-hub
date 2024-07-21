@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
   api:
-    image: smart-home-hub-api:0.0.2
+    image: smart-home-hub-api:latest
     build: .
     container_name: "smart-home-hub-api"
     environment:

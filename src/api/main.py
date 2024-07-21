@@ -3,6 +3,7 @@ import socket
 from fastapi import FastAPI
 import uvicorn
 
+from backend.settings import ApiSettings
 from routers import devices
 from routers import measurements
 
@@ -12,7 +13,7 @@ app = FastAPI(
     title="smart-home-hub-api",
     summary="",
     description="",
-    version="0.0.2",
+    version=ApiSettings().VERSION
 )
 app.include_router(devices.router, prefix=HUB_PREFIX)
 app.include_router(measurements.router, prefix=HUB_PREFIX)
