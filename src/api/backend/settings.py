@@ -19,3 +19,7 @@ class TimescaleSettings(BaseSettings):
 
     # class Config:
     #     env_file = ".env"
+
+
+class ApiSettings(BaseSettings):
+    VERSION: str = "0.0.3"
