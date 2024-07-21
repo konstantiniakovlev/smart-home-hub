@@ -13,6 +13,26 @@ TAG = "Measurements"
 router = APIRouter(prefix=f"/{TAG.lower()}")
 
 
+@router.get(
+    path="/{device_id}",
+    summary="Get Measurement Data",
+    description="",
+    tags=[TAG],
+    status_code=status.HTTP_200_OK,
+    response_model=list[Measurement]
+)
+def get_measurement_data(
+        device_id: int,
+        sensor_tag: Optional[str] = None,
+        session: Session = Depends(create_session)
+):
+    response = session.query(MeasurementModel)\
+        .filter(MeasurementModel.device_id == device_id)
+    if sensor_tag is not None:
+        response = response.filter(MeasurementModel.sensor_tag == sensor_tag)
+    return response.all()
+
+
 @router.post(
     path="/",
     summary="Store Measurement",
