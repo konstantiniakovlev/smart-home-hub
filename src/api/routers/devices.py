@@ -54,6 +54,8 @@ def register_device(payload: RegisterDevice, session: Session = Depends(create_s
         session.commit()
         session.refresh(post)
 
+        response = session.query(DeviceModel).filter(DeviceModel.mac_address == payload.mac_address)
+
     else:
         response.update(payload.dict(), synchronize_session=False)
         session.commit()

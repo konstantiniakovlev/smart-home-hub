@@ -19,7 +19,6 @@ jobs:
           rsync -av --exclude='/home/pi/Projects/smart-home-hub/.git' $GITHUB_WORKSPACE/ /home/pi/Projects/smart-home-hub/
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > /home/pi/Projects/smart-home-hub/.env
           cd /home/pi/Projects/smart-home-hub/
-          sudo docker compose up --build -d timescaledb --force-recreate
           sudo docker compose up --build -d api
           sudo docker system prune -f
         env:
