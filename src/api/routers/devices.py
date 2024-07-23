@@ -49,12 +49,12 @@ def register_device(payload: RegisterDevice, session: Session = Depends(create_s
         .filter(DeviceModel.mac_address == payload.mac_address)
 
     if response.first() is None:
-        post = DeviceModel(**payload.dict())
-        session.add(post)
+        device_obj = DeviceModel(**payload.dict())
+        session.add(device_obj)
         session.commit()
-        session.refresh(post)
+        session.refresh(device_obj)
 
-        response = session.query(DeviceModel).filter(DeviceModel.mac_address == payload.mac_address)
+        return [device_obj]
 
     else:
         response.update(payload.dict(), synchronize_session=False)
@@ -73,8 +73,9 @@ def register_device(payload: RegisterDevice, session: Session = Depends(create_s
 def delete_device(device_id: int, session: Session = Depends(create_session)):
     response = session.query(DeviceModel).filter(DeviceModel.device_id == device_id)
 
-    if response.first() is not None:
-        session.delete(response.first())
+    device_obj = response.first()
+    if device_obj is not None:
+        session.delete(device_obj)
         session.commit()
 
 
