@@ -1,10 +1,11 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from starlette import status
 from sqlalchemy.orm import Session
 
 from backend.session import create_session
+from models.devices import DeviceModel
 from models.measurements import MeasurementModel
 from schemas.measurements import Measurement
 
@@ -42,9 +43,16 @@ def get_measurement_data(
 )
 def store_measurement(
         payload: Measurement,
-        session: Session = Depends(create_session)
+        response: Response,
+        session: Session = Depends(create_session),
 ):
     measurement = MeasurementModel(**payload.dict())
+
+    device_query = session.query(DeviceModel).filter(DeviceModel.device_id == measurement.device_id)
+    if device_query.first() is None:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return "Device does not exist"
+
     session.add(measurement)
     session.commit()
     session.refresh(measurement)
