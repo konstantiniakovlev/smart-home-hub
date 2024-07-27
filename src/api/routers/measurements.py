@@ -31,8 +31,7 @@ def get_measurement_data(
         end_time: Optional[datetime.datetime] = None,
         session: Session = Depends(create_session)
 ):
-    device_query = session.query(DeviceModel).filter(DeviceModel.device_id == device_id)
-    if device_query.first() is None:
+    if not device_exists(device_id=device_id, session=session):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return "Device does not exist"
 
@@ -61,15 +60,22 @@ def get_measurement_data(
 def store_measurement(
         payload: Measurement,
         response: Response,
-        session: Session = Depends(create_session),
+        session: Session = Depends(create_session)
 ):
     measurement = MeasurementModel(**payload.dict())
 
-    device_query = session.query(DeviceModel).filter(DeviceModel.device_id == measurement.device_id)
-    if device_query.first() is None:
+    if not device_exists(device_id=measurement.device_id, session=session):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return "Device does not exist"
 
     session.add(measurement)
     session.commit()
     session.refresh(measurement)
+
+
+def device_exists(device_id: int, session: Session):
+    device_query = session.query(DeviceModel).filter(DeviceModel.device_id == device_id)
+    if device_query.first() is None:
+        return False
+    return True
+
