@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Response
@@ -25,12 +26,22 @@ router = APIRouter(prefix=f"/{TAG.lower()}")
 def get_measurement_data(
         device_id: int,
         sensor_tag: Optional[str] = None,
+        start_time: Optional[datetime.datetime] = None,
+        end_time: Optional[datetime.datetime] = None,
         session: Session = Depends(create_session)
 ):
     query = session.query(MeasurementModel)\
         .filter(MeasurementModel.device_id == device_id)
+
     if sensor_tag is not None:
         query = query.filter(MeasurementModel.sensor_tag == sensor_tag)
+
+    if start_time is not None:
+        query = query.filter(MeasurementModel.time >= start_time)
+
+    if end_time is not None:
+        query = query.filter(MeasurementModel.time <= end_time)
+
     return query.all()
 
 
