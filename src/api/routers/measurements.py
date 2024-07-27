@@ -26,11 +26,11 @@ def get_measurement_data(
         sensor_tag: Optional[str] = None,
         session: Session = Depends(create_session)
 ):
-    response = session.query(MeasurementModel)\
+    query = session.query(MeasurementModel)\
         .filter(MeasurementModel.device_id == device_id)
     if sensor_tag is not None:
-        response = response.filter(MeasurementModel.sensor_tag == sensor_tag)
-    return response.all()
+        query = query.filter(MeasurementModel.sensor_tag == sensor_tag)
+    return query.all()
 
 
 @router.post(
@@ -44,7 +44,7 @@ def store_measurement(
         payload: Measurement,
         session: Session = Depends(create_session)
 ):
-    post = MeasurementModel(**payload.dict())
-    session.add(post)
+    measurement = MeasurementModel(**payload.dict())
+    session.add(measurement)
     session.commit()
-    session.refresh(post)
+    session.refresh(measurement)
