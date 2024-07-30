@@ -6,6 +6,8 @@ import uvicorn
 from backend.settings import ApiSettings
 from routers import devices
 from routers import measurements
+from routers import tags
+
 
 HUB_PREFIX = "/hub"
 
@@ -17,6 +19,7 @@ app = FastAPI(
 )
 app.include_router(devices.router, prefix=HUB_PREFIX)
 app.include_router(measurements.router, prefix=HUB_PREFIX)
+app.include_router(tags.router, prefix=HUB_PREFIX)
 
 
 if __name__ == "__main__":
