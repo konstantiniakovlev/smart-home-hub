@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from backend.session import create_session
 from models.devices import DeviceModel
 from models.measurements import MeasurementModel
+from models.tags import TagModel
 from schemas.measurements import Measurement
 
 TAG = "Measurements"
@@ -68,6 +69,10 @@ def store_measurement(
         response.status_code = status.HTTP_400_BAD_REQUEST
         return "Device does not exist"
 
+    if not sensor_exists(sensor_tag=measurement.sensor_tag, session=session):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return "Sensor tag does not exist"
+
     session.add(measurement)
     session.commit()
     session.refresh(measurement)
@@ -79,3 +84,9 @@ def device_exists(device_id: int, session: Session):
         return False
     return True
 
+
+def sensor_exists(sensor_tag: str, session: Session):
+    tag_query = session.query(TagModel).filter(TagModel.tag == sensor_tag)
+    if tag_query.first() is None:
+        return False
+    return True
