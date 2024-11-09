@@ -31,11 +31,16 @@ create table if not exists sensors (
 alter table sensors add constraint unique_sensor unique (name, tag);
 
 insert into sensors (name, tag, description)
- values ('Soil Moisture Sensor', 'SM_PV', 'AZDelivery Hygrometer Soil Moisture Sensor - raw value')
+ values ('BM280 Temperature Sensor', 'BME280-TEMP-PV', 'BM280 Temperature Sensor - Processed Value')
   on conflict (name, tag) do
-  update set name = excluded.name, tag = excluded.tag, description = excluded.description;
+   update set name = excluded.name, tag = excluded.tag, description = excluded.description;
 
 insert into sensors (name, tag, description)
- values ('Soil Moisture Sensor Calculated', 'SM_CALC', 'AZDelivery Hygrometer Soil Moisture Sensor - calculated moisture percentage')
+ values ('BM280 Pressure Sensor', 'BME280-PRES-PV', 'BM280 Pressure Sensor - Processed Value')
+  on conflict (name, tag) do
+   update set name = excluded.name, tag = excluded.tag, description = excluded.description;
+
+insert into sensors (name, tag, description)
+ values ('BM280 Humidity Sensor', 'BME280-HUMID-PV', 'BM280 Humidity Sensor - Processed Value')
   on conflict (name, tag) do
    update set name = excluded.name, tag = excluded.tag, description = excluded.description;
