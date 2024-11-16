@@ -22,4 +22,4 @@ class TimescaleSettings(BaseSettings):
 
 
 class ApiSettings(BaseSettings):
-    VERSION: str = "0.0.6"
+    VERSION: str = "0.0.7"
