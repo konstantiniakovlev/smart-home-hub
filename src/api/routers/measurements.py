@@ -40,7 +40,7 @@ def get_measurement_data(
         .filter(MeasurementModel.device_id == device_id)
 
     if sensor_tag is not None:
-        query = query.filter(MeasurementModel.sensor_tag == sensor_tag)
+        query = query.filter(MeasurementModel.sensor_tag.contains(sensor_tag.upper()))
 
     if start_time is not None:
         query = query.filter(MeasurementModel.time >= start_time)

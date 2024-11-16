@@ -31,5 +31,5 @@ def get_tags(
     if name_filter is not None:
         query = query.filter(TagModel.name.contains(name_filter.title()))
     if sensor_tag is not None:
-        query = query.filter(TagModel.tag == sensor_tag.upper())
+        query = query.filter(TagModel.tag.contains(sensor_tag.upper()))
     return query.all()
