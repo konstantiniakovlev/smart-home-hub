@@ -11,15 +11,34 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 60
     steps:
-      - name: Check out repository into Raspberry Pi
+      - name: Check Out Repository into Raspberry Pi
         uses: actions/checkout@v4
-
-      - name: Docker Compose Up
+      - name: Sync Repository with Raspberry Pi
         run: |
           rsync -av --exclude='/home/pi/Projects/smart-home-hub/.git' $GITHUB_WORKSPACE/ /home/pi/Projects/smart-home-hub/
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" > /home/pi/Projects/smart-home-hub/.env
+      - name: Compose up TimescaleDB
+        run: |
+          if sudo docker ps --filter "name=timescaledb" --filter "status=running" | grep timescaledb; then
+            echo "timescaledb is already running"
+          else
+            cd /home/pi/Projects/smart-home-hub/
+            sudo docker compose up --build -d timescaledb
+          fi
+      - name: Compose up Api
+        run: |
           cd /home/pi/Projects/smart-home-hub/
           sudo docker compose up --build -d api
-          sudo docker system prune -f
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      - name: Compose up Proxy Server
+        run: |
+          if sudo docker ps --filter "name=nginx-proxy-server" --filter "status=running" | grep nginx-proxy-server; then
+            echo "nginx-proxy-server is already running"
+          else
+            cd /home/pi/Projects/smart-home-hub/
+            sudo docker compose up --build -d nginx
+          fi
+      - name: Remove Unused Docker Images
+        run: |
+          sudo docker system prune -f
