@@ -31,14 +31,10 @@ jobs:
           sudo docker compose up --build -d api
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      - name: Compose up Proxy Server
+      - name: Compose up Reverse Proxy Server
         run: |
-          if sudo docker ps --filter "name=nginx-proxy-server" --filter "status=running" | grep nginx-proxy-server; then
-            echo "nginx-proxy-server is already running"
-          else
-            cd /home/pi/Projects/smart-home-hub/
-            sudo docker compose up --build -d nginx
-          fi
+          cd /home/pi/Projects/smart-home-hub/
+          sudo docker compose up --build -d nginx
       - name: Remove Unused Docker Images
         run: |
           sudo docker system prune -f
