@@ -36,7 +36,7 @@ def get_devices(
 
 
 @router.post(
-    path="/register",
+    path="/register/",
     summary="Add Device to Registry",
     description="",
     tags=[TAG],
