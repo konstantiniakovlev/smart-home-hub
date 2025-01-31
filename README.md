@@ -25,6 +25,14 @@ Using self-hosted runners in a workflow: [link](https://docs.github.com/en/actio
 
 The self-hosted runner must be set up as a service using ``svc.sh`` script: [link](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/configuring-the-self-hosted-runner-application-as-a-service).
 
+## Custom Domain
+To utilize the custom domain set in ``nginx/nginx.conf``,
+add the following line to ``/etc/hosts`` on Raspberry Pi:
+
+```
+127.0.1.1 home-hub.local
+```
+
 ## Notes
 For some reason, despite setting the environmental variable in ``deploy.yml``:
 ```
