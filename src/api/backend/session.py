@@ -7,6 +7,7 @@ from backend.settings import TimescaleSettings
 
 def get_dsn():
     settings = TimescaleSettings()
+
     host = settings.POSTGRES_HOST
     user = settings.POSTGRES_USER
     password = settings.POSTGRES_PASSWORD

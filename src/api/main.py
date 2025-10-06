@@ -16,7 +16,7 @@ app = FastAPI(
     title="smart-home-hub-api",
     summary="",
     description="",
-    version=ApiSettings().VERSION
+    version=ApiSettings.VERSION
 )
 app.include_router(devices.router, prefix=HUB_PREFIX)
 app.include_router(measurements.router, prefix=HUB_PREFIX)

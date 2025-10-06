@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
+from dataclasses import dataclass
 
 
 class TimescaleSettings(BaseSettings):
@@ -17,9 +18,10 @@ class TimescaleSettings(BaseSettings):
     POSTGRES_DB: str = "postgres"
     POSTGRES_PORT: int = 5432
 
-    # class Config:
-    #     env_file = ".env"
+    class Config:
+        env_file = ".env"
 
 
-class ApiSettings(BaseSettings):
+@dataclass
+class ApiSettings:
     VERSION: str = "0.0.10"
