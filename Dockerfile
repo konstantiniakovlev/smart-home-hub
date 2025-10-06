@@ -1,4 +1,4 @@
-FROM --platform=linux/arm/v8 python:3.11 as build
+FROM --platform=${BUILDPLATFORM} python:3.11 as build
 LABEL authors="Konstantin"
 
 COPY src/. src/.
