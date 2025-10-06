@@ -8,4 +8,4 @@ ENV POSTGRES_HOST=host.docker.internal
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-CMD ["python", "src/api/main.py"]
+CMD ["python", "-m", "src.api.main"]

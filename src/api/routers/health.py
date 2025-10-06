@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette import status
 
-from schemas.health import HealthCheck
+from src.api.schemas.health import HealthCheck
 
 
 TAG = "Health checks"

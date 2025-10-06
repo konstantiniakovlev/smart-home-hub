@@ -1,6 +1,6 @@
 from sqlalchemy import Column, VARCHAR
 
-from models.base import Base
+from src.api.models.base import Base
 
 
 class TagModel(Base):

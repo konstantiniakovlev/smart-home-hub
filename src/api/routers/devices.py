@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from starlette import status
 from sqlalchemy.orm import Session
 
-from backend.session import create_session
-from models.devices import DeviceModel
-from schemas.devices import Device, RegisterDevice
+from src.api.backend.session import create_session
+from src.api.models.devices import DeviceModel
+from src.api.schemas.devices import Device, RegisterDevice
 
 
 TAG = "Devices"

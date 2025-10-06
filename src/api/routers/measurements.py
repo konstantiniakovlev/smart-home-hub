@@ -4,12 +4,15 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Response
 from starlette import status
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
-from backend.session import create_session
-from models.devices import DeviceModel
-from models.measurements import MeasurementModel
-from models.tags import TagModel
-from schemas.measurements import Measurement
+from src.api.backend.session import create_session, create_async_session
+from src.api.models.devices import DeviceModel
+from src.api.models.measurements import MeasurementModel
+from src.api.models.tags import TagModel
+from src.api.schemas.measurements import Measurement
+
 
 TAG = "Measurements"
 
@@ -24,31 +27,33 @@ router = APIRouter(prefix=f"/{TAG.lower()}")
     status_code=status.HTTP_200_OK,
     response_model=list[Measurement] | str
 )
-def get_measurement_data(
+async def get_measurement_data(
         response: Response,
         device_id: int,
         sensor_tag: Optional[str] = None,
         start_time: Optional[datetime.datetime] = None,
         end_time: Optional[datetime.datetime] = None,
-        session: Session = Depends(create_session)
+        session: Session = Depends(create_session),
+        async_session: AsyncSession = Depends(create_async_session)
 ):
     if not device_exists(device_id=device_id, session=session):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return "Device does not exist"
 
-    query = session.query(MeasurementModel)\
-        .filter(MeasurementModel.device_id == device_id)
+    query = select(MeasurementModel)\
+        .where(MeasurementModel.device_id == device_id)
 
     if sensor_tag is not None:
-        query = query.filter(MeasurementModel.sensor_tag.contains(sensor_tag.upper()))
+        query = query.where(MeasurementModel.sensor_tag.contains(sensor_tag.upper()))
 
     if start_time is not None:
-        query = query.filter(MeasurementModel.time >= start_time)
+        query = query.where(MeasurementModel.time >= start_time)
 
     if end_time is not None:
-        query = query.filter(MeasurementModel.time <= end_time)
+        query = query.where(MeasurementModel.time <= end_time)
 
-    return query.all()
+    result = await async_session.execute(query)
+    return result.scalars().all()
 
 
 @router.post(

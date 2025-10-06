@@ -3,11 +3,11 @@ import socket
 from fastapi import FastAPI
 import uvicorn
 
-from backend.settings import ApiSettings
-from routers import devices
-from routers import health
-from routers import measurements
-from routers import tags
+from src.api.backend.settings import ApiSettings
+from src.api.routers import devices
+from src.api.routers import health
+from src.api.routers import measurements
+from src.api.routers import tags
 
 
 HUB_PREFIX = "/hub"

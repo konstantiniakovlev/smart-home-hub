@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from starlette import status
 from sqlalchemy.orm import Session
 
-from backend.session import create_session
-from models.tags import TagModel
-from schemas.tags import Tag
+from src.api.backend.session import create_session
+from src.api.models.tags import TagModel
+from src.api.schemas.tags import Tag
 
 
 TAG = "Tags"

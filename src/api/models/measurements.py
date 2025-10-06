@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, VARCHAR, DateTime, Float
 from sqlalchemy.sql import func
 
-from models.base import Base
+from src.api.models.base import Base
 
 
 class MeasurementModel(Base):

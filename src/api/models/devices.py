@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, VARCHAR, Identity, DateTime
 from sqlalchemy.sql import func
 
-from models.base import Base
+from src.api.models.base import Base
 
 
 class DeviceModel(Base):
