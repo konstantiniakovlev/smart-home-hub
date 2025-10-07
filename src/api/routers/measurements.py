@@ -36,6 +36,7 @@ async def get_measurement_data(
         session: Session = Depends(create_session),
         async_session: AsyncSession = Depends(create_async_session)
 ):
+    # todo: implement TTL Cache
     if not device_exists(device_id=device_id, session=session):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return "Device does not exist"
