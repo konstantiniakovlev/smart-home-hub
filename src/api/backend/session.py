@@ -15,9 +15,8 @@ def get_dsn(use_async=False):
     db = settings.POSTGRES_DB
     port = settings.POSTGRES_PORT
 
-
-    asyncpg_str = "" if not use_async else "+asyncpg"
-    dns = f"postgresql{asyncpg_str}://{user}:{password}@{host}:{port}/{db}"
+    async_driver = "" if not use_async else "+asyncpg"
+    dns = f"postgresql{async_driver}://{user}:{password}@{host}:{port}/{db}"
     return dns
 
 

@@ -2,7 +2,7 @@ CONTAINER_IDS := $(shell docker container ls -q)
 
 .PHONY: test
 test:
-	python -m pytest tests/.
+	python -m pytest -W ignore tests/.
 
 .PHONY: build-all
 build-all:
