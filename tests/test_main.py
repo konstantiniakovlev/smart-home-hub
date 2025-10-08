@@ -128,7 +128,7 @@ class TestMain(unittest.TestCase):
         self.assertEqual(device_object["ip_address"], self.test_device.ip_address)
         self.assertEqual(device_object["device_type"], self.test_device.device_type)
         self.assertTrue(self.test_device.registered_at)
-        self.assertTrue(self.test_device.registered_at)
+        self.assertTrue(self.test_device.updated_at)
 
     def test_get_tags_given_correct_tag_filter_returns_correct_tag(self):
         response = self.client.get("/hub/tags?tag=DUMMY_TAG")
