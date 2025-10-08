@@ -113,14 +113,12 @@ class TestMain(unittest.TestCase):
 
     def test_get_devices_given_incorrect_device_id_returns_empty_list(self):
         response = self.client.get("/hub/devices?device_id=2")
-        response.raise_for_status()
         response_body = response.json()
 
         self.assertEqual(len(response_body), 0)
 
     def test_get_devices_given_correct_device_returns_correct_device(self):
         response = self.client.get("/hub/devices?device_id=1")
-        response.raise_for_status()
         response_body = response.json()
         device_object = response_body[0]
 
@@ -134,7 +132,6 @@ class TestMain(unittest.TestCase):
 
     def test_get_tags_given_correct_tag_filter_returns_correct_tag(self):
         response = self.client.get("/hub/tags?tag=DUMMY_TAG")
-        response.raise_for_status()
         response_body = response.json()
         tag_object = response_body[0]
 
@@ -143,9 +140,9 @@ class TestMain(unittest.TestCase):
         self.assertEqual(tag_object["description"], self.test_tag.description)
         self.assertEqual(tag_object["tag"], self.test_tag.tag)
 
+
     def test_get_measurements_given_correct_id_returns_correct_measurement(self):
         response = self.client.get("/hub/measurements/1")
-        response.raise_for_status()
         response_body = response.json()
         measurement_object = response_body[0]
 
@@ -154,3 +151,9 @@ class TestMain(unittest.TestCase):
         self.assertEqual(measurement_object["device_id"], self.test_measurement.device_id)
         self.assertEqual(measurement_object["sensor_tag"], self.test_measurement.sensor_tag)
         self.assertEqual(measurement_object["value"], self.test_measurement.value)
+
+
+    def test_get_measurements_given_incorrect_device_id_returns_400(self):
+        response = self.client.get("/hub/measurements/2")
+
+        self.assertEqual(400, response.status_code)
